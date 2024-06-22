@@ -22,6 +22,9 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<TeachingShift> teachingShiftList;
 
+    @ManyToOne
+    @JoinColumn(name = "chair_id")
+    private Chair chair;
 
     public Course(){
 
@@ -74,5 +77,13 @@ public class Course {
 
     public void setTeachingShiftList(List<TeachingShift> teachingShiftList) {
         this.teachingShiftList = teachingShiftList;
+    }
+
+    public Chair getChair() {
+        return chair;
+    }
+
+    public void setChair(Chair chair) {
+        this.chair = chair;
     }
 }

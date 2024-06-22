@@ -2,6 +2,7 @@ package com.sse.ooseproject.models;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,9 @@ public class Building {
     @ManyToOne
     @JoinColumn(name = "university_id")
     private University university;
+
+    @OneToMany(mappedBy = "building")
+    private List<Chair> chairList;
 
     public Building(){
     }
@@ -62,5 +66,13 @@ public class Building {
 
     public void setRoomList(List<Room> roomList) {
         this.roomList = roomList;
+    }
+
+    public List<Chair> getChairList() {
+        return chairList;
+    }
+
+    public void setChairList(List<Chair> chairList) {
+        this.chairList = chairList;
     }
 }

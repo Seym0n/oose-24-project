@@ -23,7 +23,6 @@ public class StudentController {
     @GetMapping("/students")
     public String students(Model model, @RequestParam(name = "sort_by", required = false, defaultValue = "firstName") String sortBy,
                            @RequestParam(name = "sort_asc", required = false, defaultValue = "true") boolean sortAsc) {
-        // TODO add functionality.
 
         Sort sort = sortAsc ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         List<Student> students = studentRepository.findAll(sort);

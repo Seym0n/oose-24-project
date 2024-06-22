@@ -2,6 +2,7 @@ package com.sse.ooseproject.models;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -12,6 +13,9 @@ public class Employee extends Person {
 
     @OneToMany(mappedBy = "employee")
     private List<TeachingShift> teachingShiftList;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Chair> chairList;
 
     public Employee(){
         super();
@@ -47,5 +51,13 @@ public class Employee extends Person {
 
     public void setTeachingShiftList(List<TeachingShift> teachingShiftList) {
         this.teachingShiftList = teachingShiftList;
+    }
+
+    public List<Chair> getChairList() {
+        return chairList;
+    }
+
+    public void setChairList(List<Chair> chairList) {
+        this.chairList = chairList;
     }
 }

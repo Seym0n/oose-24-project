@@ -26,7 +26,6 @@ public class EmployeeController {
     @GetMapping("/employees")
     public String employees(Model model, @RequestParam(name = "sort_by", required = false, defaultValue = "firstName") String sortBy,
                            @RequestParam(name = "sort_asc", required = false, defaultValue = "true") boolean sortAsc) {
-        // TODO add functionality.
 
         Sort sort = sortAsc ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         List<Employee> employees = this.employeeRepository.findAll(sort);

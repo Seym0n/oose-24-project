@@ -14,7 +14,11 @@ public class Room {
 
     private String number;
     private int seats;
+
+
+    @Column(name = "is_auditorium")
     private boolean isAuditorium;
+
 
     @ManyToOne
     @JoinColumn(name = "building_id")
@@ -28,9 +32,9 @@ public class Room {
 
     }
 
-    public Room(String pNumber, int pSeats, boolean pIsAuditorium, Building pBuilding, List<RoomOccupancy> pRoomOccupancy){
+    public Room(String pNumber, int pSeats, boolean pAuditorium, Building pBuilding, List<RoomOccupancy> pRoomOccupancy){
         this.number = pNumber;
-        this.isAuditorium = pIsAuditorium;
+        this.isAuditorium = pAuditorium;
         this.seats = pSeats;
         this.building = pBuilding;
         this.occupancies = pRoomOccupancy;
@@ -62,11 +66,11 @@ public class Room {
         this.seats = seats;
     }
 
-    public boolean getIsAuditorium() {
+    public boolean isAuditorium() {
         return isAuditorium;
     }
 
-    public void setIsAuditorium(boolean auditorium) {
+    public void setAuditorium(boolean auditorium) {
         this.isAuditorium = auditorium;
     }
 

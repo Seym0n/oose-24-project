@@ -2,6 +2,8 @@ package com.sse.ooseproject.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "chair")
 public class Chair extends OrganizationalUnit {
@@ -11,9 +13,16 @@ public class Chair extends OrganizationalUnit {
     private Institute institute;
 
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
     private Employee owner;
 
+    @ManyToOne
+    @JoinColumn(name = "building_id")
     private Building building;
+
+    @OneToMany(mappedBy = "chair")
+    private List<Course> courseList;
 
     public Chair(){
 
@@ -39,5 +48,13 @@ public class Chair extends OrganizationalUnit {
 
     public void setBuilding(Building building) {
         this.building = building;
+    }
+
+    public List<Course> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(List<Course> courseList) {
+        this.courseList = courseList;
     }
 }
