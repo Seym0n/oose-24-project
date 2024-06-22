@@ -14,6 +14,10 @@ public class Person {
     private String lastName;
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "university_id")
+    private University university;
+
 
     /**
      * A Person object. Spring requires an empty constructor. Do not change this but rather implement another
@@ -21,11 +25,14 @@ public class Person {
      */
     public Person() {}
 
-    public Person(String pFirstName, String pLastName, String pEmail){
+    public Person(String pFirstName, String pLastName, String pEmail, University pUniversity){
         this.firstName = pFirstName;
         this.lastName = pLastName;
         this.email = pEmail;
+        this.university = pUniversity;
     }
+
+    // Getter & Setter methods
 
     public long getId() {
         return id;
@@ -57,5 +64,13 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public University getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
     }
 }
