@@ -2,7 +2,9 @@ package com.sse.ooseproject.controllers;
 
 import com.sse.ooseproject.InstituteRepository;
 import com.sse.ooseproject.StudentRepository;
+import com.sse.ooseproject.exceptions.StudentValidationException;
 import com.sse.ooseproject.models.Student;
+import com.sse.ooseproject.validators.StudentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -15,12 +17,14 @@ import java.util.List;
 public class StudentController {
 
     private final StudentRepository studentRepository;
+    private final StudentValidator studentValidator;
     private final InstituteRepository instituteRepository;
 
     @Autowired
-    public StudentController(StudentRepository pStudentRepository, InstituteRepository pInstituteRepository) {
+    public StudentController(StudentRepository pStudentRepository, InstituteRepository pInstituteRepository, StudentValidator pStudentValidator) {
         this.studentRepository = pStudentRepository;
         this.instituteRepository = pInstituteRepository;
+        this.studentValidator = pStudentValidator;
     }
 
     @GetMapping("/students")
@@ -52,23 +56,32 @@ public class StudentController {
     }
 
     @PostMapping("/student/new")
-    public String addStudent(Model model, @ModelAttribute("student") Student student){
+    public String addStudent(Model model, @ModelAttribute("student") Student student) {
+
+        try {
+
+            studentValidator.validateStudent(student);
 
 
+            student = new Student(student);
 
-        student = new Student(student);
-
-        studentRepository.save(student);
+            studentRepository.save(student);
 
 
-        student = new Student();
+            student = new Student();
 
-        model.addAttribute("student", student);
+            model.addAttribute("student", student);
+            model.addAttribute("message_type", "success");
+            model.addAttribute("message", "Der Studierende wurde hinzugefügt.");
+        } catch (StudentValidationException e){
+
+            model.addAttribute("student", student);
+            model.addAttribute("message_type", "error");
+            model.addAttribute("message", e.getMessage());
+        }
+
         model.addAttribute("page_type", "new");
         model.addAttribute("study_subjects", instituteRepository.listStudySubjects());
-        model.addAttribute("message_type", "success");
-        model.addAttribute("message", "Der Studierende wurde hinzugefügt.");
-
 
         return "edit_student";
     }
