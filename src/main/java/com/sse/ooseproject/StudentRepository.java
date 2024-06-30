@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    // TODO add query methods.
 
     @Query("SELECT st FROM Student st WHERE st.matNr = :matNr")
     List<Student> findStudentByMatNr(@Param("matNr") long matNr);

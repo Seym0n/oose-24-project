@@ -1,5 +1,6 @@
 package com.sse.ooseproject.controllers;
 
+import com.sse.ooseproject.InstituteRepository;
 import com.sse.ooseproject.StudentRepository;
 import com.sse.ooseproject.models.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,12 @@ import java.util.List;
 public class StudentController {
 
     private final StudentRepository studentRepository;
+    private final InstituteRepository instituteRepository;
 
     @Autowired
-    public StudentController(StudentRepository pStudentRepository) {
+    public StudentController(StudentRepository pStudentRepository, InstituteRepository pInstituteRepository) {
         this.studentRepository = pStudentRepository;
+        this.instituteRepository = pInstituteRepository;
     }
 
     @GetMapping("/students")
@@ -32,5 +35,19 @@ public class StudentController {
 
         // Returning the name of a view (found in resources/templates) as a string lets this endpoint return that view.
         return "students";
+    }
+
+    @GetMapping("/student/new")
+    public String getNewStudent(Model model){
+
+        Student student = new Student();
+
+        model.addAttribute("student", student);
+        model.addAttribute("page_type", "new");
+
+
+        model.addAttribute("study_subjects", instituteRepository.listStudySubjects());
+
+        return "edit_student";
     }
 }
