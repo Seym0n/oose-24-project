@@ -24,6 +24,12 @@ public class Student extends Person {
         this.studySubject = pStudySubject;
     }
 
+    public Student(Student pStudent){
+        super(pStudent.getFirstName(), pStudent.getLastName(), pStudent.getEmail(), pStudent.getUniversity());
+        this.matNr = pStudent.getMatNr();
+        this.studySubject = pStudent.getStudySubject();
+    }
+
     // Getter & Setter methods
 
     public long getMatNr() {

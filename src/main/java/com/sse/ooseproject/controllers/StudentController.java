@@ -50,4 +50,26 @@ public class StudentController {
 
         return "edit_student";
     }
+
+    @PostMapping("/student/new")
+    public String addStudent(Model model, @ModelAttribute("student") Student student){
+
+
+
+        student = new Student(student);
+
+        studentRepository.save(student);
+
+
+        student = new Student();
+
+        model.addAttribute("student", student);
+        model.addAttribute("page_type", "new");
+        model.addAttribute("study_subjects", instituteRepository.listStudySubjects());
+        model.addAttribute("message_type", "success");
+        model.addAttribute("message", "Der Studierende wurde hinzugefügt.");
+
+
+        return "edit_student";
+    }
 }
