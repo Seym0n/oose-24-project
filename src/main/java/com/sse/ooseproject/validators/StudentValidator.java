@@ -50,13 +50,13 @@ public class StudentValidator {
         }
 
 
-        return false;
+        return true;
     }
 
     private boolean checkFieldsFilled(Student pStudent){
-        return !pStudent.getFirstName().isEmpty() &&
+        return (pStudent.getFirstName() != null && pStudent.getLastName() != null && pStudent.getEmail() != null && pStudent.getStudySubject() != null) && (!pStudent.getFirstName().isEmpty() &&
                 !pStudent.getLastName().isEmpty() &&
-                !pStudent.getEmail().isEmpty();
+                !pStudent.getEmail().isEmpty());
     }
 
     private boolean checkEmail(Student pStudent){
