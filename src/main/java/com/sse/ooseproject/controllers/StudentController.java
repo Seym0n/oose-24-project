@@ -10,8 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class StudentController {
@@ -60,7 +62,7 @@ public class StudentController {
 
         try {
 
-            studentValidator.validateStudent(student);
+            studentValidator.validateStudent(student, false);
 
 
             student = new Student(student);
@@ -81,6 +83,62 @@ public class StudentController {
         }
 
         model.addAttribute("page_type", "new");
+        model.addAttribute("study_subjects", instituteRepository.listStudySubjects());
+
+        return "edit_student";
+    }
+
+    @GetMapping("/student/edit")
+    public Object editStudent(Model model, @RequestParam(name = "id", required = true) Long id){
+
+        Optional<Student> student = studentRepository.findById(id);
+        if(student.isPresent()){
+            model.addAttribute("student", student);
+        } else {
+            return new RedirectView("/students");
+        }
+
+        model.addAttribute("page_type", "edit");
+        model.addAttribute("study_subjects", instituteRepository.listStudySubjects());
+
+        return "edit_student";
+    }
+
+    @PostMapping("/student/edit")
+    public Object editStudentPOST(Model model, @ModelAttribute("student") Student student){
+        Optional<Student> studentDB = studentRepository.findById(student.getId());
+        if(studentDB.isPresent()){
+
+            try {
+
+                studentValidator.validateStudent(student, true);
+
+                Student studentObj = studentDB.get();
+
+                studentObj.setFirstName(student.getFirstName());
+                studentObj.setLastName(student.getLastName());
+                studentObj.setEmail(student.getEmail());
+                studentObj.setMatNr(student.getMatNr());
+                studentObj.setStudySubject(student.getStudySubject());
+
+                studentRepository.save(student);
+
+
+                model.addAttribute("student", studentObj);
+                model.addAttribute("message_type", "success");
+                model.addAttribute("message", "Der Studierende wurde bearbeitet.");
+            } catch (StudentValidationException e){
+
+                model.addAttribute("student", student);
+                model.addAttribute("message_type", "error");
+                model.addAttribute("message", e.getMessage());
+            }
+
+        } else {
+            return new RedirectView("/students");
+        }
+
+        model.addAttribute("page_type", "edit");
         model.addAttribute("study_subjects", instituteRepository.listStudySubjects());
 
         return "edit_student";

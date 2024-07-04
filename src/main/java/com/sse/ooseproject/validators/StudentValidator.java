@@ -23,7 +23,7 @@ public class StudentValidator {
         this.studentRepository = pStudentRepository;
     }
 
-    public boolean validateStudent(Student pStudent) throws StudentValidationException {
+    public boolean validateStudent(Student pStudent, boolean pExisting) throws StudentValidationException {
 
         if(!checkFieldsFilled(pStudent)){
             throw new StudentValidationException("Ein oder mehrere Felder sind leer.");
@@ -45,7 +45,7 @@ public class StudentValidator {
             throw new StudentValidationException("Das Fach existiert nicht.");
         }
 
-        if(!checkMatNrNotOccupied(pStudent)){
+        if(!checkMatNrNotOccupied(pStudent) && !pExisting){
             throw new StudentValidationException("Die Matrikelnummer ist bereits belegt.");
         }
 
