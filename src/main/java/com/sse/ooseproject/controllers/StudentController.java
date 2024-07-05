@@ -1,8 +1,11 @@
 package com.sse.ooseproject.controllers;
 
+import com.sse.ooseproject.EnrollmentRepository;
 import com.sse.ooseproject.InstituteRepository;
 import com.sse.ooseproject.StudentRepository;
 import com.sse.ooseproject.exceptions.StudentValidationException;
+import com.sse.ooseproject.models.Course;
+import com.sse.ooseproject.models.Enrollment;
 import com.sse.ooseproject.models.Student;
 import com.sse.ooseproject.validators.StudentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +24,14 @@ public class StudentController {
     private final StudentRepository studentRepository;
     private final StudentValidator studentValidator;
     private final InstituteRepository instituteRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @Autowired
-    public StudentController(StudentRepository pStudentRepository, InstituteRepository pInstituteRepository, StudentValidator pStudentValidator) {
+    public StudentController(StudentRepository pStudentRepository, InstituteRepository pInstituteRepository, StudentValidator pStudentValidator, EnrollmentRepository pEnrollmentRepository) {
         this.studentRepository = pStudentRepository;
         this.instituteRepository = pInstituteRepository;
         this.studentValidator = pStudentValidator;
+        this.enrollmentRepository = pEnrollmentRepository;
     }
 
     @GetMapping("/students")
@@ -142,5 +147,34 @@ public class StudentController {
         model.addAttribute("study_subjects", instituteRepository.listStudySubjects());
 
         return "edit_student";
+    }
+
+    @GetMapping("/student/enroll")
+    public Object enrollStudent(Model model, @RequestParam(name = "id", required = true) Long id, @RequestParam(name = "semester", required = false) String semester){
+
+        Optional<Student> student = studentRepository.findById(id);
+        if(student.isPresent()){
+            Student studentDB = student.get();
+
+            model.addAttribute("student", studentDB);
+
+            List<Enrollment> enrollments;
+            if(semester != null){
+                enrollments = enrollmentRepository.findByStudentIdAndSemester(id, semester);
+            } else {
+                enrollments = enrollmentRepository.findByStudentId(id);
+            }
+
+            List<Course> coursesAvail = instituteRepository.getCoursesByStudySubject(studentDB.getStudySubject());
+
+            model.addAttribute("courses", coursesAvail);
+            model.addAttribute("semester", semester);
+            model.addAttribute("enrollments", enrollments);
+        } else {
+            return new RedirectView("/students");
+        }
+
+
+        return "enrollment";
     }
 }

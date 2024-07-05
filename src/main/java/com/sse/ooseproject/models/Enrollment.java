@@ -8,14 +8,15 @@ public class Enrollment {
 
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @EmbeddedId
+    private EnrollmentId id;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
+    @MapsId("course_id")
     private Course course;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @MapsId("student_id")
     private Student student;
 
     private String semester;
@@ -54,5 +55,13 @@ public class Enrollment {
 
     public void setSemester(String semester) {
         this.semester = semester;
+    }
+
+    public EnrollmentId getId() {
+        return id;
+    }
+
+    public void setId(EnrollmentId id) {
+        this.id = id;
     }
 }
