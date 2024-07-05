@@ -39,7 +39,7 @@ public class EnrollmentController {
         Optional<Course> course = this.courseRepository.findById(pCourseId);
         Optional<Student> student = this.studentRepository.findById(pStudentId);
         if(course.isEmpty() || student.isEmpty()){
-            return new RedirectView("/student/enroll?id=" + pStudentId);
+            return new RedirectView("/student/enroll?id=" + pStudentId + "&semester="+pSemester);
         }
 
         Course courseDB = course.get();
@@ -54,7 +54,7 @@ public class EnrollmentController {
         enrollment.setId(id);
         enrollmentRepository.save(enrollment);
 
-        return new RedirectView("/student/enroll?id=" + pStudentId);
+        return new RedirectView("/student/enroll?id=" + pStudentId + "&semester="+pSemester);
 
     }
 
@@ -64,6 +64,6 @@ public class EnrollmentController {
                                   @RequestParam(name = "semester", required = true) String pSemester){
         this.enrollmentRepository.deleteEnrollment(pStudentId, pCourseId, pSemester);
 
-        return new RedirectView("/student/enroll?id=" + pStudentId);
+        return new RedirectView("/student/enroll?id=" + pStudentId + "&semester="+pSemester);
     }
 }

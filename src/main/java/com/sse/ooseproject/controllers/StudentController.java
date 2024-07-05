@@ -15,8 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class StudentController {
@@ -150,7 +153,7 @@ public class StudentController {
     }
 
     @GetMapping("/student/enroll")
-    public Object enrollStudent(Model model, @RequestParam(name = "id", required = true) Long id, @RequestParam(name = "semester", required = false) String semester){
+    public Object enrollStudent(Model model, @RequestParam(name = "id", required = true) Long id, @RequestParam(name = "semester", required = false, defaultValue = "2024 Spring") String semester){
 
         Optional<Student> student = studentRepository.findById(id);
         if(student.isPresent()){
@@ -166,8 +169,12 @@ public class StudentController {
             }
 
             List<Course> coursesAvail = instituteRepository.getCoursesByStudySubject(studentDB.getStudySubject());
+            Set<String> seenNames = new HashSet<>();
+            List<Course> uniqueCourses = coursesAvail.stream()
+                    .filter(course -> seenNames.add(course.getName()))
+                    .toList();
 
-            model.addAttribute("courses", coursesAvail);
+            model.addAttribute("courses", uniqueCourses);
             model.addAttribute("semester", semester);
             model.addAttribute("enrollments", enrollments);
         } else {
